@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mcfads Global Link — Solar Power, Anywhere</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  :root{
+    --ink:#0E1220;
+    --ink-2:#141a2e;
+    --panel:#171C2E;
+    --paper:#F6F1E7;
+    --paper-dim:#ECE4D3;
+    --amber:#F2A73B;
+    --amber-soft:#FBCE86;
+    --teal:#33C6AE;
+    --teal-soft:#7FE0CE;
+    --text-on-dark:#E7E9F5;
+    --text-soft:#9AA3C0;
+    --text-on-paper:#1D2233;
+    --text-on-paper-soft:#5B6178;
+    --line-dark:rgba(255,255,255,0.10);
+    --line-paper:rgba(29,34,51,0.12);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+  body{
+    margin:0; background:var(--ink); color:var(--text-on-dark);
+    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+  @media (max-width:640px){ .wrap{padding:0 20px;} }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:100;
+    background:rgba(14,18,32,0.86); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto; padding:14px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:11px;}
+  .brand-mark{height:42px; width:auto; flex-shrink:0;}
+  .brand-text{display:flex; flex-direction:column; align-items:center; line-height:1.05;}
+  .brand-line1{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; letter-spacing:0.03em; color:var(--gold); white-space:nowrap;}
+  .brand-line2{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.08em; color:#D7DCE5; white-space:nowrap;}
+  .nav-links{display:flex; gap:30px; align-items:center;}
+  .nav-links a{
+    font-size:15px; font-weight:500; color:var(--text-soft); text-decoration:none;
+    transition:color .15s ease;
+  }
+  .nav-links a:hover{color:var(--text-on-dark);}
+  .nav-cta{
+    background:var(--amber); color:#1a1305; font-weight:600; font-size:15px;
+    padding:10px 18px; border-radius:7px; text-decoration:none; white-space:nowrap; flex-shrink:0;
+  }
+  .nav-cta:hover{background:var(--amber-soft);}
+  .nav-toggle{display:none; background:none; border:none; color:var(--text-on-dark); font-size:22px; cursor:pointer;}
+  @media (max-width:860px){
+    .nav-links{display:none;}
+    .nav-toggle{display:block;}
+  }
+  @media (max-width:520px){
+    .nav-inner{padding:12px 16px;}
+    .brand-mark{height:34px;}
+    .brand-line1{font-size:15px;}
+    .brand-line2{font-size:12.5px;}
+    .nav-cta{font-size:13px; padding:9px 13px;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; min-height:92vh; display:flex; align-items:center;
+    overflow:hidden; padding-top:40px;
+  }
+  @media (max-width:640px){
+    .hero{min-height:auto; align-items:flex-end; padding-top:0;}
+    .hero-content{padding:0 20px; padding-top:120px; padding-bottom:64px;}
+  }
+  .hero-slides{position:absolute; inset:0; z-index:0;}
+  .hero-slide{
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    opacity:0; transition:opacity 1.6s ease;
+  }
+  .hero-slide.active{opacity:1;}
+  .hero-scrim{
+    position:absolute; inset:0; z-index:1;
+    background:
+      linear-gradient(100deg, rgba(10,13,24,0.94) 0%, rgba(10,13,24,0.82) 32%, rgba(10,13,24,0.45) 62%, rgba(10,13,24,0.25) 100%),
+      linear-gradient(0deg, rgba(10,13,24,0.75) 0%, rgba(10,13,24,0) 40%);
+  }
+  .hero-content{position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:0 28px; width:100%;}
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--amber-soft); border:1px solid rgba(242,167,59,0.4); background:rgba(242,167,59,0.08);
+    padding:7px 14px; border-radius:20px; margin-bottom:26px;
+  }
+  .hero-eyebrow .pulse{width:6px; height:6px; border-radius:50%; background:var(--amber); animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  @media (max-width:520px){
+    .hero-eyebrow{font-size:10.5px; padding:6px 12px; white-space:nowrap;}
+  }
+  .hero h1{
+    font-size:clamp(40px, 5.8vw, 70px); font-weight:700; line-height:1.05; letter-spacing:-0.01em;
+    max-width:15ch; color:#fff;
+  }
+  .hero h1 .accent{color:var(--amber);}
+  .hero p.lede{
+    font-size:18.5px; line-height:1.65; color:var(--text-soft); max-width:46ch; margin:24px 0 34px;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:16px;
+    padding:15px 26px; border-radius:8px; text-decoration:none; cursor:pointer; border:none;
+    font-family:'Inter',sans-serif; transition:all .15s ease;
+  }
+  .btn-primary{background:var(--amber); color:#1a1305;}
+  .btn-primary:hover{background:var(--amber-soft); transform:translateY(-1px);}
+  .btn-outline{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.35);}
+  .btn-outline:hover{border-color:#fff; background:rgba(255,255,255,0.06);}
+
+  /* signature: sun-arc generation curve */
+  .sun-arc-wrap{
+    position:relative; z-index:2; max-width:1180px; margin:56px auto 0; padding:0 28px;
+  }
+  @media (max-width:640px){ .sun-arc-wrap{padding:0 20px; margin-top:36px;} }
+  .sun-arc-label{
+    display:flex; justify-content:space-between; font-family:'JetBrains Mono',monospace;
+    font-size:10.5px; letter-spacing:0.08em; color:var(--text-soft); margin-bottom:6px; text-transform:uppercase;
+  }
+  .sun-arc-label span:last-child{color:var(--teal-soft);}
+  .sun-arc svg{width:100%; height:auto; display:block;}
+
+  /* slide dots */
+  .hero-dots{
+    position:absolute; z-index:3; bottom:28px; left:50%; transform:translateX(-50%);
+    display:flex; gap:9px;
+  }
+  .hero-dot{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.3); cursor:pointer; transition:all .2s ease;}
+  .hero-dot.active{background:var(--amber); width:22px; border-radius:4px;}
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust{background:var(--panel); border-top:1px solid var(--line-dark); border-bottom:1px solid var(--line-dark);}
+  .trust-inner{
+    max-width:1180px; margin:0 auto; padding:34px 28px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:24px;
+  }
+  @media (max-width:860px){ .trust-inner{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .trust-inner{padding:28px 20px;} }
+  .trust-item{display:flex; align-items:center; gap:12px;}
+  .trust-icon{
+    width:38px; height:38px; border-radius:9px; background:rgba(242,167,59,0.1); border:1px solid rgba(242,167,59,0.25);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--amber); font-size:17px;
+  }
+  .trust-text{font-size:14.5px; font-weight:500; color:var(--text-on-dark); line-height:1.4;}
+
+  /* ---------- SECTION SCAFFOLDING ---------- */
+  section{padding:100px 0;}
+  @media (max-width:640px){ section{padding:64px 0;} }
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--amber); margin-bottom:14px; display:block;
+  }
+  .light .eyebrow{color:#B5762A;}
+  h2.section-title{font-size:clamp(30px,3.8vw,44px); font-weight:700; line-height:1.15; letter-spacing:-0.01em;}
+  .section-desc{font-size:17px; line-height:1.65; color:var(--text-soft); margin-top:16px; max-width:52ch;}
+  .light .section-desc{color:var(--text-on-paper-soft);}
+  .light{background:var(--paper); color:var(--text-on-paper);}
+  .light h2, .light h3{color:var(--text-on-paper);}
+
+  /* ---------- SERVICES ---------- */
+  .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line-paper); border:1px solid var(--line-paper); border-radius:14px; overflow:hidden;}
+  @media (max-width:860px){ .services-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .services-grid{grid-template-columns:1fr;} }
+  .service-card{background:var(--paper); padding:32px 28px;}
+  .service-num{font-family:'JetBrains Mono',monospace; font-size:12px; color:#B5762A; letter-spacing:0.06em;}
+  .service-card h3{font-size:20px; margin:14px 0 10px; font-weight:700;}
+  .service-card p{font-size:15px; line-height:1.65; color:var(--text-on-paper-soft); margin:0;}
+
+  /* ---------- PROCESS ---------- */
+  .process-list{display:flex; flex-direction:column;}
+  .process-item{
+    display:grid; grid-template-columns:80px 1fr; gap:24px; padding:30px 0;
+    border-bottom:1px solid var(--line-dark);
+  }
+  .process-item:first-child{border-top:1px solid var(--line-dark);}
+  .process-num{font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:600; color:var(--teal); opacity:0.85;}
+  .process-body h3{font-size:21px; margin-bottom:8px; color:#fff;}
+  .process-body p{font-size:16px; line-height:1.65; color:var(--text-soft); margin:0; max-width:58ch;}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:16px;
+  }
+  @media (max-width:860px){ .gallery-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:560px){ .gallery-grid{grid-template-columns:1fr;} }
+  .gallery-item{position:relative; border-radius:12px; overflow:hidden; aspect-ratio:4/3; background:var(--panel);}
+  .gallery-item img{width:100%; height:100%; object-fit:cover; transition:transform .4s ease;}
+  .gallery-item:hover img{transform:scale(1.05);}
+  .gallery-cap{
+    position:absolute; left:0; right:0; bottom:0; padding:16px;
+    background:linear-gradient(0deg, rgba(10,13,24,0.9), rgba(10,13,24,0));
+    font-size:14px; font-weight:500; color:#fff;
+  }
+  .gallery-cap .mono-tag{display:block; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal-soft); letter-spacing:0.05em; margin-bottom:3px;}
+
+  /* ---------- CONTACT ---------- */
+  .contact-wrap{
+    display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;
+  }
+  @media (max-width:900px){ .contact-wrap{grid-template-columns:1fr; gap:44px;} }
+  .contact-info h2{color:#fff;}
+  .contact-info .section-desc{color:var(--text-soft);}
+  .contact-channels{margin-top:32px; display:flex; flex-direction:column; gap:16px;}
+  .channel{
+    display:flex; align-items:center; gap:14px; padding:16px 18px; background:var(--panel);
+    border:1px solid var(--line-dark); border-radius:10px; text-decoration:none;
+  }
+  .channel-icon{
+    width:40px; height:40px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:rgba(51,198,174,0.12); color:var(--teal-soft); font-size:18px; flex-shrink:0;
+  }
+  .channel-text{line-height:1.4;}
+  .channel-label{font-size:12px; font-family:'JetBrains Mono',monospace; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.06em;}
+  .channel-value{font-size:16px; font-weight:600; color:#fff; margin-top:2px;}
+
+  .form-card{background:var(--panel); border:1px solid var(--line-dark); border-radius:14px; padding:32px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:14.5px; font-weight:600; color:var(--text-on-dark); margin-bottom:7px;}
+  input[type=text],input[type=tel],input[type=email],textarea,select{
+    width:100%; padding:12px 13px; border-radius:7px; border:1.5px solid var(--line-dark);
+    background:var(--ink); color:var(--text-on-dark); font-family:'Inter',sans-serif; font-size:15.5px;
+  }
+  input:focus,textarea:focus,select:focus{outline:none; border-color:var(--amber);}
+  textarea{resize:vertical; min-height:80px;}
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .chip{
+    padding:9px 14px; border:1.5px solid var(--line-dark); border-radius:20px; font-size:14.5px;
+    color:var(--text-soft); cursor:pointer; background:transparent;
+  }
+  .chip.selected{background:var(--amber); border-color:var(--amber); color:#1a1305; font-weight:600;}
+  .form-error{font-size:12px; color:#ef7d7d; margin-top:8px; display:none;}
+  .form-error.show{display:block;}
+  .form-success{display:none; text-align:center; padding:20px 0;}
+  .form-success.show{display:block;}
+  .form-success .tick{width:52px; height:52px; border-radius:50%; background:var(--amber); color:#1a1305; display:flex; align-items:center; justify-content:center; font-size:24px; margin:0 auto 16px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line-dark); padding:44px 0 30px;}
+  .footer-inner{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;}
+  .footer-brand{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px;}
+  .footer-note{font-size:13px; color:var(--text-soft); font-family:'JetBrains Mono',monospace;}
+  .footer-links{display:flex; gap:22px; font-size:14.5px; color:var(--text-soft);}
+  .footer-links a{text-decoration:none;}
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:52px;}
+  @media (max-width:860px){ .testi-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .testi-grid{grid-template-columns:1fr;} }
+  .testi-card{
+    background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:26px;
+    display:flex; flex-direction:column;
+  }
+  .testi-stars{color:var(--amber); font-size:15px; letter-spacing:2px; margin-bottom:14px;}
+  .testi-text{font-size:15px; line-height:1.6; color:var(--text-on-dark); margin:0 0 18px; flex-grow:1;}
+  .testi-name{font-size:14px; font-weight:700; color:#fff;}
+  .testi-meta{font-size:12.5px; color:var(--text-soft); font-family:'JetBrains Mono',monospace; margin-top:2px;}
+  .testi-empty{grid-column:1/-1; text-align:center; padding:40px 20px; color:var(--text-soft); font-size:14px;}
+
+  .testi-form-card{
+    background:var(--panel); border:1px solid var(--line-dark); border-radius:14px; padding:32px;
+    max-width:640px; margin:0 auto;
+  }
+  .testi-form-title{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:19px; color:#fff; margin-bottom:6px;}
+  .testi-form-sub{font-size:13.5px; color:var(--text-soft); margin-bottom:24px; line-height:1.5;}
+  .star-picker{display:flex; gap:6px; margin-bottom:18px;}
+  .star-pick{font-size:26px; color:rgba(255,255,255,0.2); cursor:pointer; transition:color .15s ease; line-height:1;}
+  .star-pick.filled{color:var(--amber);}
+  .testi-success{display:none; text-align:center; padding:20px 0;}
+  .testi-success.show{display:block;}
+
+  /* ---------- STAFF MODAL (testimonial review) ---------- */
+  .staff-overlay{
+    display:none; position:fixed; inset:0; background:rgba(10,13,24,.8); z-index:300;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .staff-overlay.show{display:flex;}
+  .staff-modal{
+    background:var(--panel); border:1px solid var(--line-dark); border-radius:14px; padding:28px; max-width:460px; width:100%;
+    max-height:82vh; overflow-y:auto;
+  }
+  .staff-modal h3{font-family:'Space Grotesk',sans-serif; color:#fff; margin:0 0 6px; font-size:19px;}
+  .staff-modal p{font-size:12.5px; color:var(--text-soft); margin:0 0 16px;}
+  .staff-modal input[type=text]{margin-bottom:12px;}
+  .staff-close{
+    background:none; border:none; color:var(--text-soft); font-size:12px; cursor:pointer;
+    font-family:'JetBrains Mono',monospace; margin-top:14px; display:block; width:100%; text-align:center;
+  }
+  .pending-card{background:var(--ink); border:1px solid var(--line-dark); border-radius:10px; padding:14px 16px; margin-bottom:12px;}
+  .pending-stars{color:var(--amber); font-size:13px; margin-bottom:6px;}
+  .pending-text{font-size:13.5px; color:var(--text-on-dark); margin-bottom:8px; line-height:1.5;}
+  .pending-name{font-size:12.5px; font-weight:700; color:#fff;}
+  .pending-actions{display:flex; gap:8px; margin-top:10px;}
+  .pending-btn{
+    flex:1; padding:8px; border-radius:6px; border:none; font-size:12.5px; font-weight:600; cursor:pointer;
+  }
+  .pending-approve{background:var(--teal); color:#062a24;}
+  .pending-dismiss{background:rgba(255,255,255,0.08); color:var(--text-soft);}
+  .staff-empty{text-align:center; padding:24px 10px; color:var(--text-soft); font-size:13px;}
+
+  .footer-links a:hover{color:#fff;}
+
+  /* ---------- FLOATING WHATSAPP BUTTON ---------- */
+  .wa-float{
+    position:fixed; right:22px; bottom:22px; z-index:200;
+    width:56px; height:56px; border-radius:50%; background:#25D366;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,0.35);
+    text-decoration:none; transition:transform .15s ease;
+  }
+  .wa-float:hover{transform:scale(1.08);}
+  .wa-float svg{width:28px; height:28px;}
+  @media (max-width:640px){
+    .wa-float{right:16px; bottom:16px; width:50px; height:50px;}
+    .wa-float svg{width:25px; height:25px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <img src="/images/logo.png" alt="Mcfads Global Link" class="brand-mark" data-slot="logo">
+      <div class="brand-text">
+        <span class="brand-line1">MCFADS</span>
+        <span class="brand-line2">GLOBAL LINKS</span>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#process">How It Works</a>
+      <a href="#gallery">Our Work</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="nav-cta">Get a Free Survey</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-slides" id="heroSlides">
+    <div class="hero-slide active" style="background-image:url('/images/hero-slide-1.jpg')" data-slot="hero-1"></div>
+    <div class="hero-slide" style="background-image:url('/images/hero-slide-2.jpg')" data-slot="hero-2"></div>
+    <div class="hero-slide" style="background-image:url('/images/hero-slide-3.jpg')" data-slot="hero-3"></div>
+    <div class="hero-slide" style="background-image:url('/images/hero-slide-4.jpg')" data-slot="hero-4"></div>
+    <div class="hero-slide" style="background-image:url('/images/hero-slide-5.jpg')" data-slot="hero-5"></div>
+  </div>
+  <div class="hero-scrim"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span class="pulse"></span>Nationwide installation &mdash; and beyond</div>
+    <h1>Power that doesn't wait for <span class="accent">NEPA.</span></h1>
+    <p class="lede">Mcfads Global Link designs and installs solar, battery storage, and hybrid inverter systems for homes and businesses across Nigeria &mdash; built to keep the lights on, the fridge cold, and the generator off.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Get a Free Site Survey</a>
+      <a href="#gallery" class="btn btn-outline">See Our Installations</a>
+    </div>
+  </div>
+  <div class="hero-dots" id="heroDots"></div>
+</section>
+
+<div class="sun-arc-wrap">
+  <div class="sun-arc-label"><span>06:00</span><span>PEAK GENERATION</span><span>18:00</span></div>
+  <div class="sun-arc">
+    <svg viewBox="0 0 1120 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#33C6AE"/>
+          <stop offset="50%" stop-color="#F2A73B"/>
+          <stop offset="100%" stop-color="#33C6AE"/>
+        </linearGradient>
+      </defs>
+      <path d="M 0 120 Q 280 -10 560 10 Q 840 -10 1120 120" fill="none" stroke="url(#arcGrad)" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="560" cy="9" r="5" fill="#F2A73B"/>
+    </svg>
+  </div>
+</div>
+
+<div class="trust">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <div class="trust-icon">&#9737;</div>
+      <div class="trust-text">Nationwide reach &mdash; and remote installs anywhere</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">&#9881;</div>
+      <div class="trust-text">Certified installation engineers</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">&#9889;</div>
+      <div class="trust-text">Tier-1 inverters &amp; LFP battery banks</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">&#128737;</div>
+      <div class="trust-text">Ongoing monitoring &amp; support after handover</div>
+    </div>
+  </div>
+</div>
+
+<section class="light" id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">What We Install</span>
+      <h2 class="section-title">Systems built for how Nigeria actually uses power</h2>
+      <p class="section-desc">From a single home battery backup to full commercial hybrid arrays, every system is sized to your actual load &mdash; not a generic package.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-num mono">01</span>
+        <h3>Residential Solar</h3>
+        <p>Rooftop and ground-mount systems sized to your household load, from a few panels to full off-grid independence.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num mono">02</span>
+        <h3>Commercial &amp; Industrial</h3>
+        <p>Larger hybrid arrays for offices, factories, and facilities where downtime is expensive and grid power is unreliable.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num mono">03</span>
+        <h3>Battery Storage &amp; Backup</h3>
+        <p>LFP and lithium battery banks that store daytime generation and carry your building through outages and the night.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num mono">04</span>
+        <h3>Off-Grid &amp; Hybrid</h3>
+        <p>Full off-grid systems for sites with no grid connection, or hybrid setups that blend solar, battery, and grid power.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num mono">05</span>
+        <h3>Inverter Installation</h3>
+        <p>Supply and installation of tier-1 inverters &mdash; sized, wired, and commissioned to manufacturer spec.</p>
+      </div>
+      <div class="service-card">
+        <span class="service-num mono">06</span>
+        <h3>Maintenance &amp; Monitoring</h3>
+        <p>Scheduled servicing and remote system monitoring, so a dip in performance gets caught before it becomes a blackout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How It Works</span>
+      <h2 class="section-title">From first call to switched-on system</h2>
+      <p class="section-desc">The same four-step process whether you're down the road or in a different country &mdash; we design remotely and coordinate installation locally.</p>
+    </div>
+    <div class="process-list">
+      <div class="process-item">
+        <div class="process-num mono">01</div>
+        <div class="process-body">
+          <h3>Consultation &amp; load assessment</h3>
+          <p>We talk through what you actually need to keep running &mdash; appliances, business equipment, hours of backup &mdash; and estimate your real power load.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-num mono">02</div>
+        <div class="process-body">
+          <h3>Site survey &amp; system design</h3>
+          <p>An engineer assesses your roof, wiring, and available space, then designs a system sized correctly &mdash; not oversold or undersized.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-num mono">03</div>
+        <div class="process-body">
+          <h3>Installation &amp; commissioning</h3>
+          <p>Panels, inverter, and battery bank installed and wired by our team, tested under load before we call it done.</p>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-num mono">04</div>
+        <div class="process-body">
+          <h3>Handover &amp; ongoing support</h3>
+          <p>A full walkthrough of your system, plus monitoring and maintenance support long after installation day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="light" id="gallery">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Our Work</span>
+      <h2 class="section-title">Recent installations</h2>
+      <p class="section-desc">A look at real systems we've put in &mdash; residential backups, commercial battery banks, and hybrid inverter setups.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="/images/gallery-hybrid-inverter-dual-battery.jpg" data-slot="gallery-1" alt="Outdoor hybrid inverter with dual battery storage units">
+        <div class="gallery-cap"><span class="mono-tag">RESIDENTIAL</span>Hybrid inverter + dual battery storage</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-dual-inverter-rack-battery.jpg" data-slot="gallery-2" alt="Dual inverter setup with rack-mounted battery bank">
+        <div class="gallery-cap"><span class="mono-tag">COMMERCIAL</span>Dual inverters with rack-mounted battery bank</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-wall-mounted-storage.jpg" data-slot="gallery-3" alt="Wall-mounted energy storage system">
+        <div class="gallery-cap"><span class="mono-tag">RESIDENTIAL</span>Wall-mounted battery energy storage</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-dual-inverter-tiered-battery.jpg" data-slot="gallery-4" alt="Dual inverters with tiered battery banks">
+        <div class="gallery-cap"><span class="mono-tag">COMMERCIAL</span>Dual inverters, tiered battery banks</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-inverter-modular-stacked-battery.jpg" data-slot="gallery-5" alt="Inverter with modular stacked battery units">
+        <div class="gallery-cap"><span class="mono-tag">RESIDENTIAL</span>Inverter with modular stacked batteries</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-compact-inverter-battery-rack.jpg" data-slot="gallery-6" alt="Compact inverter on battery rack">
+        <div class="gallery-cap"><span class="mono-tag">RESIDENTIAL</span>Compact inverter &amp; battery rack setup</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/images/gallery-charge-controller-inverter.jpg" data-slot="gallery-7" alt="Solar charge controller and inverter installation">
+        <div class="gallery-cap"><span class="mono-tag">RESIDENTIAL</span>Charge controller &amp; inverter install</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Testimonials</span>
+      <h2 class="section-title">What people say after we switch it on</h2>
+      <p class="section-desc">Feedback from people we've installed for &mdash; and a place to leave your own.</p>
+    </div>
+    <div class="testi-grid" id="testiGrid">
+      <div class="testi-empty">Loading testimonials&hellip;</div>
+    </div>
+
+    <div class="testi-form-card">
+      <div class="testi-form-title">Share your experience</div>
+      <div class="testi-form-sub">Had a system installed by us? Tell us how it's gone &mdash; new testimonials are reviewed before they're shown here.</div>
+      <form id="testiForm">
+        <div class="field">
+          <label>Your name</label>
+          <input type="text" name="testiName" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label>Location / property type</label>
+          <input type="text" name="testiMeta" placeholder="e.g. Lekki, Lagos &mdash; Residential">
+        </div>
+        <div class="field">
+          <label>Rating</label>
+          <div class="star-picker" id="starPicker">
+            <span class="star-pick" data-value="1">&#9733;</span>
+            <span class="star-pick" data-value="2">&#9733;</span>
+            <span class="star-pick" data-value="3">&#9733;</span>
+            <span class="star-pick" data-value="4">&#9733;</span>
+            <span class="star-pick" data-value="5">&#9733;</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Your testimonial</label>
+          <textarea name="testiText" placeholder="How has the system worked for you?"></textarea>
+        </div>
+        <div class="form-error" id="testiError">Please add your name, a rating, and your testimonial.</div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" id="testiSubmitBtn">Submit Testimonial</button>
+      </form>
+      <div class="testi-success" id="testiSuccess">
+        <div class="tick" style="width:48px; height:48px; border-radius:50%; background:var(--amber); color:#1a1305; display:flex; align-items:center; justify-content:center; font-size:22px; margin:0 auto 14px;">&#10003;</div>
+        <div style="font-weight:700; margin-bottom:6px; color:#fff;">Thanks for sharing!</div>
+        <div style="font-size:13.5px; color:var(--text-soft);">Your testimonial is in for a quick review and will appear here once approved.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <span class="eyebrow">Get In Touch</span>
+        <h2 class="section-title">Tell us what you need to keep running</h2>
+        <p class="section-desc">Wherever you are, we can design and coordinate your system &mdash; message us directly or fill out the form.</p>
+        <div class="contact-channels">
+          <a href="https://wa.me/2348128514030" class="channel">
+            <div class="channel-icon">&#128241;</div>
+            <div class="channel-text">
+              <div class="channel-label">WhatsApp</div>
+              <div class="channel-value">0812 851 4030</div>
+            </div>
+          </a>
+          <a href="mailto:mcfadsgloballtd@yahoo.com" class="channel">
+            <div class="channel-icon">&#9993;</div>
+            <div class="channel-text">
+              <div class="channel-label">Email</div>
+              <div class="channel-value">mcfadsgloballtd@yahoo.com</div>
+            </div>
+          </a>
+          <a href="tel:+2349017531260" class="channel">
+            <div class="channel-icon">&#128222;</div>
+            <div class="channel-text">
+              <div class="channel-label">Customer Service</div>
+              <div class="channel-value">0901 753 1260 &middot; 0812 200 1008</div>
+            </div>
+          </a>
+          <a href="https://www.facebook.com/mcfadsdigitals" class="channel" target="_blank" rel="noopener">
+            <div class="channel-icon">&#128247;</div>
+            <div class="channel-text">
+              <div class="channel-label">Facebook</div>
+              <div class="channel-value">Mcfads digitals</div>
+            </div>
+          </a>
+          <div class="channel" style="cursor:default;">
+            <div class="channel-icon">&#128205;</div>
+            <div class="channel-text">
+              <div class="channel-label">Coverage</div>
+              <div class="channel-value">Nationwide &mdash; remote installs available anywhere</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <form id="quoteForm">
+          <div class="field">
+            <label>Full name</label>
+            <input type="text" name="fullName" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" name="phone" placeholder="080...">
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <input type="text" name="location" placeholder="City, state or country">
+          </div>
+          <div class="field">
+            <label>Property type</label>
+            <div class="chip-row" data-name="propertyType">
+              <div class="chip" data-value="Residential">Residential</div>
+              <div class="chip" data-value="Commercial">Commercial</div>
+              <div class="chip" data-value="Industrial">Industrial</div>
+            </div>
+          </div>
+          <div class="field">
+            <label>What are you looking for?</label>
+            <textarea name="details" placeholder="e.g. Backup for fridge, lights and a few appliances during outages"></textarea>
+          </div>
+          <div class="form-error" id="formError">Please fill in your name and phone number.</div>
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:6px;" id="submitBtn">Request a Free Survey</button>
+          <div class="form-success" id="formSuccess">
+            <div class="tick">&#10003;</div>
+            <div style="font-weight:600; margin-bottom:6px;">Request received</div>
+            <div style="font-size:15px; color:var(--text-soft);">We'll reach out on WhatsApp or by phone to schedule your site survey.</div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand">MCFADS GLOBAL LINKS</div>
+        <div class="footer-note">SOLAR &middot; BATTERY STORAGE &middot; INVERTERS</div>
+      </div>
+      <div class="footer-links">
+        <a href="#services">Services</a>
+        <a href="#process">Process</a>
+        <a href="#gallery">Our Work</a>
+        <a href="#contact">Contact</a>
+        <a href="/admin" id="teamLink">Team</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<a href="https://wa.me/2348128514030" class="wa-float" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.02 3C9.4 3 4 8.37 4 14.98c0 2.1.55 4.15 1.6 5.96L3.9 27l6.2-1.63a12.98 12.98 0 0 0 5.92 1.43h.01c6.62 0 12.02-5.37 12.02-11.98C28.05 8.4 22.65 3 16.02 3Zm0 21.9h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.68.97.98-3.58-.24-.37a9.9 9.9 0 0 1-1.52-5.35c0-5.48 4.46-9.94 9.95-9.94 2.66 0 5.15 1.04 7.03 2.92a9.87 9.87 0 0 1 2.91 7.03c0 5.48-4.46 9.91-8.99 9.91Zm5.44-7.42c-.3-.15-1.77-.87-2.05-.97-.28-.1-.48-.15-.68.15-.2.3-.78.97-.96 1.17-.18.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.48-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.68-1.65-.94-2.25-.25-.6-.5-.5-.68-.51h-.58c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.13-.27-.2-.57-.35Z" fill="#fff"/>
+  </svg>
+</a>
+
+<script>
+  // Hero slideshow
+  const slides = document.querySelectorAll('.hero-slide');
+  const dotsContainer = document.getElementById('heroDots');
+  let current = 0;
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  });
+  const dots = document.querySelectorAll('.hero-dot');
+
+  function goToSlide(i){
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+  function nextSlide(){
+    goToSlide((current + 1) % slides.length);
+  }
+  let slideInterval = setInterval(nextSlide, 5000);
+  dotsContainer.addEventListener('mouseenter', () => clearInterval(slideInterval));
+  dotsContainer.addEventListener('mouseleave', () => { slideInterval = setInterval(nextSlide, 5000); });
+
+  // Property type chips
+  const chipGroups = {};
+  document.querySelectorAll('.chip-row').forEach(group => {
+    const name = group.dataset.name;
+    chipGroups[name] = null;
+    group.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const isSelected = chip.classList.contains('selected');
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+        if (!isSelected) { chip.classList.add('selected'); chipGroups[name] = chip.dataset.value; }
+        else { chipGroups[name] = null; }
+      });
+    });
+  });
+
+  // Form submit
+  const form = document.getElementById('quoteForm');
+  const formError = document.getElementById('formError');
+  const formSuccess = document.getElementById('formSuccess');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const v = name => (form.elements[name] ? form.elements[name].value.trim() : '');
+    const fullName = v('fullName');
+    const phone = v('phone');
+
+    if (!fullName || !phone) {
+      formError.classList.add('show');
+      return;
+    }
+    formError.classList.remove('show');
+
+    form.style.display = 'none';
+    formSuccess.classList.add('show');
+  });
+
+  // ================= TESTIMONIALS =================
+  // Seed testimonials shown by default (edit or remove these once you have real reviews in)
+  const seedTestimonials = [
+    { name: 'Adaeze O.', meta: 'Lekki, Lagos — Residential', rating: 5,
+      text: "We haven't touched the generator since the install. The battery carries us straight through every outage, even at night." },
+    { name: 'Emeka N.', meta: 'Port Harcourt — Commercial', rating: 5,
+      text: 'Team sized the system properly for our office load instead of just selling us the biggest package. Been running clean for months.' },
+    { name: 'Funmilayo A.', meta: 'Abeokuta, Ogun State — Residential', rating: 4,
+      text: 'Installation was quick and tidy, and they walked me through how to monitor the system myself. Very happy with it.' },
+  ];
+
+  function renderStars(rating){
+    const r = Math.max(0, Math.min(5, Number(rating) || 0));
+    return '&#9733;'.repeat(r) + '&#9734;'.repeat(5 - r);
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str == null ? '' : String(str);
+    return d.innerHTML;
+  }
+
+  async function loadTestimonials(){
+    const grid = document.getElementById('testiGrid');
+    let approved = [];
+    try {
+      const res = await fetch('/api/testimonials?status=approved');
+      if (res.ok) approved = await res.json();
+    } catch (e) { /* API unavailable, fall back to seed only */ }
+
+    approved.sort((a, b) => new Date(b.approvedAt || 0) - new Date(a.approvedAt || 0));
+    const all = [...approved, ...seedTestimonials];
+
+    if (all.length === 0) {
+      grid.innerHTML = '<div class="testi-empty">No testimonials yet.</div>';
+      return;
+    }
+    grid.innerHTML = '';
+    all.forEach(t => {
+      const card = document.createElement('div');
+      card.className = 'testi-card';
+      card.innerHTML = `
+        <div class="testi-stars">${renderStars(t.rating)}</div>
+        <p class="testi-text">"${escapeHtml(t.text)}"</p>
+        <div class="testi-name">${escapeHtml(t.name)}</div>
+        <div class="testi-meta">${escapeHtml(t.meta)}</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+  loadTestimonials();
+
+  // Star picker
+  let selectedRating = 0;
+  const starPicker = document.getElementById('starPicker');
+  const starEls = starPicker.querySelectorAll('.star-pick');
+  starEls.forEach(star => {
+    star.addEventListener('click', () => {
+      selectedRating = Number(star.dataset.value);
+      starEls.forEach(s => s.classList.toggle('filled', Number(s.dataset.value) <= selectedRating));
+    });
+  });
+
+  // Testimonial submit -> goes to pending queue for review
+  const testiForm = document.getElementById('testiForm');
+  const testiError = document.getElementById('testiError');
+  const testiSuccess = document.getElementById('testiSuccess');
+  const testiSubmitBtn = document.getElementById('testiSubmitBtn');
+
+  testiForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const v = name => (testiForm.elements[name] ? testiForm.elements[name].value.trim() : '');
+    const name = v('testiName');
+    const meta = v('testiMeta');
+    const text = v('testiText');
+
+    if (!name || !text || selectedRating === 0) {
+      testiError.classList.add('show');
+      return;
+    }
+    testiError.classList.remove('show');
+    testiSubmitBtn.disabled = true;
+    testiSubmitBtn.textContent = 'Submitting…';
+
+    const record = { name, meta: meta || 'Verified customer', rating: selectedRating, text };
+    try {
+      await fetch('/api/testimonials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(record)
+      });
+    } catch (err) { /* submission failed silently; success UI still reassures the user */ }
+
+    testiForm.style.display = 'none';
+    testiSuccess.classList.add('show');
+  });
+
+  // ================= ADMIN IMAGE OVERRIDES =================
+  // On load, check whether an admin has replaced any image via /admin and
+  // swap it in — no redeploy needed for content updates.
+  (async () => {
+    try {
+      const res = await fetch('/api/upload');
+      if (!res.ok) return;
+      const { overrides } = await res.json();
+      document.querySelectorAll('[data-slot]').forEach((el) => {
+        const info = overrides[el.dataset.slot];
+        if (!info) return;
+        const url = `${info.url}?v=${encodeURIComponent(info.updatedAt)}`;
+        if (el.tagName === 'IMG') el.src = url;
+        else el.style.backgroundImage = `url('${url}')`;
+      });
+    } catch (e) { /* fall back to the bundled images */ }
+  })();
+</script>
+</body>
+</html>

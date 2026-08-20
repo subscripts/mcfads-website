@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Mcfads Global Link</title>
+<style>
+  :root{
+    --ink:#0E1220; --panel:#171C2E; --paper:#F6F1E7; --amber:#F2A73B; --amber-soft:#FBCE86;
+    --teal:#33C6AE; --text-on-dark:#E7E9F5; --text-soft:#9AA3C0; --line-dark:rgba(255,255,255,0.10);
+    --danger:#ef7d7d;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--ink); color:var(--text-on-dark); font-family:'Inter',sans-serif;}
+  .wrap{max-width:900px; margin:0 auto; padding:40px 24px;}
+  h1{font-size:24px; margin:0 0 4px;}
+  .sub{color:var(--text-soft); font-size:14px; margin-bottom:28px;}
+  .card{background:var(--panel); border:1px solid var(--line-dark); border-radius:12px; padding:24px; margin-bottom:20px;}
+  input[type=text], input[type=password]{
+    width:100%; padding:12px 14px; border-radius:8px; border:1px solid var(--line-dark);
+    background:var(--ink); color:#fff; font-size:15px; margin-bottom:14px;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:14.5px;
+    padding:11px 20px; border-radius:8px; cursor:pointer; border:none; transition:all .15s ease;
+  }
+  .btn-primary{background:var(--amber); color:#1a1305;}
+  .btn-primary:hover{background:var(--amber-soft);}
+  .btn-danger{background:transparent; color:var(--danger); border:1px solid var(--danger);}
+  .btn-danger:hover{background:rgba(239,125,125,0.1);}
+  .btn-outline{background:transparent; color:#fff; border:1px solid var(--line-dark);}
+  .btn-outline:hover{border-color:#fff;}
+  .error{color:var(--danger); font-size:13.5px; margin:-6px 0 14px; display:none;}
+  .error.show{display:block;}
+  .tabs{display:flex; gap:8px; margin-bottom:20px;}
+  .tab{padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:600; font-size:14px; color:var(--text-soft); border:1px solid var(--line-dark);}
+  .tab.active{background:var(--amber); color:#1a1305; border-color:var(--amber);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .slot-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:16px;}
+  .slot-card{background:var(--ink); border:1px solid var(--line-dark); border-radius:10px; padding:12px; text-align:center;}
+  .slot-card img{width:100%; height:120px; object-fit:cover; border-radius:6px; background:#000; margin-bottom:10px;}
+  .slot-label{font-size:13px; color:var(--text-soft); margin-bottom:10px; min-height:32px;}
+  .slot-card input[type=file]{display:none;}
+  .slot-status{font-size:11.5px; color:var(--teal); margin-top:6px; min-height:14px;}
+  .testi-card{background:var(--ink); border:1px solid var(--line-dark); border-radius:10px; padding:16px; margin-bottom:12px;}
+  .testi-stars{color:var(--amber); margin-bottom:6px;}
+  .testi-text{font-size:14px; margin:0 0 8px;}
+  .testi-name{font-weight:600; font-size:13.5px;}
+  .testi-meta{font-size:12.5px; color:var(--text-soft); margin-bottom:12px;}
+  .testi-actions{display:flex; gap:8px;}
+  .empty{color:var(--text-soft); font-size:14px; text-align:center; padding:20px;}
+  .section-title{font-size:15px; font-weight:700; margin:26px 0 12px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-soft);}
+  #logoutBtn{float:right;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="loginView" class="card">
+    <h1>Team Access</h1>
+    <div class="sub">Enter the shared admin passcode to manage images and testimonials.</div>
+    <input type="password" id="passcodeInput" placeholder="Passcode">
+    <div class="error" id="loginError">Wrong passcode — try again.</div>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%; justify-content:center;">Unlock</button>
+  </div>
+
+  <div id="adminView" style="display:none;">
+    <button class="btn btn-outline" id="logoutBtn">Log out</button>
+    <h1>Mcfads Global Link — Admin</h1>
+    <div class="sub">No code, no GitHub, no Vercel login needed — just this page.</div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="images">Images</div>
+      <div class="tab" data-tab="testimonials">Testimonials</div>
+    </div>
+
+    <div class="panel active" id="imagesPanel">
+      <div class="card">
+        <div class="section-title">Site images</div>
+        <div class="sub" style="margin-bottom:16px;">Click an image to replace it. Changes appear on the live site immediately — no redeploy needed.</div>
+        <div class="slot-grid" id="slotGrid"></div>
+      </div>
+    </div>
+
+    <div class="panel" id="testimonialsPanel">
+      <div class="card">
+        <div class="section-title">Pending review</div>
+        <div id="pendingList"><div class="empty">Loading…</div></div>
+      </div>
+      <div class="card">
+        <div class="section-title">Live on the site</div>
+        <div id="approvedList"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const TOKEN_KEY = 'mcfads_admin_token';
+  const getToken = () => sessionStorage.getItem(TOKEN_KEY);
+  const setToken = (t) => sessionStorage.setItem(TOKEN_KEY, t);
+  const clearToken = () => sessionStorage.removeItem(TOKEN_KEY);
+
+  const loginView = document.getElementById('loginView');
+  const adminView = document.getElementById('adminView');
+  const loginError = document.getElementById('loginError');
+
+  async function authedFetch(url, opts = {}) {
+    opts.headers = Object.assign({}, opts.headers, { Authorization: 'Bearer ' + getToken() });
+    const res = await fetch(url, opts);
+    if (res.status === 401) {
+      clearToken();
+      showLogin();
+      throw new Error('Session expired');
+    }
+    return res;
+  }
+
+  function showLogin() {
+    loginView.style.display = 'block';
+    adminView.style.display = 'none';
+  }
+
+  function showAdmin() {
+    loginView.style.display = 'none';
+    adminView.style.display = 'block';
+    loadSlots();
+    loadTestimonials();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', login);
+  document.getElementById('passcodeInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+
+  async function login() {
+    const passcode = document.getElementById('passcodeInput').value.trim();
+    loginError.classList.remove('show');
+    try {
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode })
+      });
+      if (!res.ok) { loginError.classList.add('show'); return; }
+      const { token } = await res.json();
+      setToken(token);
+      showAdmin();
+    } catch (e) {
+      loginError.classList.add('show');
+    }
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    clearToken();
+    showLogin();
+  });
+
+  document.querySelectorAll('.tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab + 'Panel').classList.add('active');
+    });
+  });
+
+  // ---------------- Images ----------------
+  async function loadSlots() {
+    const grid = document.getElementById('slotGrid');
+    grid.innerHTML = '<div class="empty">Loading…</div>';
+    const res = await fetch('/api/upload'); // public GET
+    const { slots, overrides } = await res.json();
+
+    grid.innerHTML = '';
+    Object.entries(slots).forEach(([slot, label]) => {
+      const card = document.createElement('div');
+      card.className = 'slot-card';
+      const override = overrides[slot];
+      const previewSrc = override ? `${override.url}?v=${encodeURIComponent(override.updatedAt)}` : '';
+      card.innerHTML = `
+        <img src="${previewSrc}" onerror="this.style.opacity=0.3" alt="${label}">
+        <div class="slot-label">${label}</div>
+        <label class="btn btn-outline" style="width:100%; justify-content:center; cursor:pointer;">
+          Replace
+          <input type="file" accept="image/*" data-slot="${slot}">
+        </label>
+        <div class="slot-status"></div>
+      `;
+      const input = card.querySelector('input[type=file]');
+      const status = card.querySelector('.slot-status');
+      input.addEventListener('change', async () => {
+        const file = input.files[0];
+        if (!file) return;
+        status.textContent = 'Uploading…';
+        try {
+          const dataUrl = await fileToDataUrl(file);
+          const res = await authedFetch('/api/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slot, dataUrl })
+          });
+          if (!res.ok) throw new Error();
+          const { url } = await res.json();
+          card.querySelector('img').src = url + '?v=' + Date.now();
+          status.textContent = 'Updated ✓';
+        } catch (e) {
+          status.textContent = 'Upload failed — try again.';
+        }
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function fileToDataUrl(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ---------------- Testimonials ----------------
+  function renderStars(rating) {
+    const r = Math.max(0, Math.min(5, Number(rating) || 0));
+    return '★'.repeat(r) + '☆'.repeat(5 - r);
+  }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str == null ? '' : String(str);
+    return d.innerHTML;
+  }
+
+  async function loadTestimonials() {
+    const pendingEl = document.getElementById('pendingList');
+    const approvedEl = document.getElementById('approvedList');
+    pendingEl.innerHTML = '<div class="empty">Loading…</div>';
+    approvedEl.innerHTML = '<div class="empty">Loading…</div>';
+
+    try {
+      const [pendingRes, approvedRes] = await Promise.all([
+        authedFetch('/api/testimonials?status=pending'),
+        fetch('/api/testimonials?status=approved'),
+      ]);
+      const pending = await pendingRes.json();
+      const approved = await approvedRes.json();
+
+      pendingEl.innerHTML = pending.length ? '' : '<div class="empty">No pending testimonials.</div>';
+      pending.forEach((t) => pendingEl.appendChild(renderPendingCard(t)));
+
+      approvedEl.innerHTML = approved.length ? '' : '<div class="empty">Nothing live yet.</div>';
+      approved.forEach((t) => approvedEl.appendChild(renderApprovedCard(t)));
+    } catch (e) {
+      pendingEl.innerHTML = '<div class="empty">Couldn\'t load testimonials.</div>';
+      approvedEl.innerHTML = '';
+    }
+  }
+
+  function renderPendingCard(t) {
+    const card = document.createElement('div');
+    card.className = 'testi-card';
+    card.innerHTML = `
+      <div class="testi-stars">${renderStars(t.rating)}</div>
+      <p class="testi-text">"${escapeHtml(t.text)}"</p>
+      <div class="testi-name">${escapeHtml(t.name)}</div>
+      <div class="testi-meta">${escapeHtml(t.meta)}</div>
+      <div class="testi-actions">
+        <button class="btn btn-primary approve">Approve</button>
+        <button class="btn btn-danger dismiss">Dismiss</button>
+      </div>
+    `;
+    card.querySelector('.approve').addEventListener('click', () => patchTestimonial(t.id, 'approve', card));
+    card.querySelector('.dismiss').addEventListener('click', () => patchTestimonial(t.id, 'dismiss', card));
+    return card;
+  }
+
+  function renderApprovedCard(t) {
+    const card = document.createElement('div');
+    card.className = 'testi-card';
+    card.innerHTML = `
+      <div class="testi-stars">${renderStars(t.rating)}</div>
+      <p class="testi-text">"${escapeHtml(t.text)}"</p>
+      <div class="testi-name">${escapeHtml(t.name)}</div>
+      <div class="testi-meta">${escapeHtml(t.meta)}</div>
+      <div class="testi-actions">
+        <button class="btn btn-danger remove">Remove from site</button>
+      </div>
+    `;
+    card.querySelector('.remove').addEventListener('click', () => patchTestimonial(t.id, 'delete', card));
+    return card;
+  }
+
+  async function patchTestimonial(id, action, card) {
+    try {
+      const res = await authedFetch('/api/testimonials', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action })
+      });
+      if (!res.ok) throw new Error();
+      loadTestimonials();
+    } catch (e) {
+      alert('Could not update — try again.');
+    }
+  }
+
+  // Restore session if we already have a valid token
+  if (getToken()) {
+    showAdmin();
+  }
+</script>
+</body>
+</html>
